@@ -10,6 +10,8 @@ RUN apt-get update && apt-get install -y \
     curl \
     libonig-dev \
     libxml2-dev \
+    nodejs \
+    npm \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install -j$(nproc) gd pdo_mysql zip opcache
 
@@ -22,9 +24,18 @@ COPY . .
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 RUN chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 
+# Paghimo ug temporary .env file
+RUN cp .env.example .env
+
+# I-generate ang app key
+RUN php artisan key:generate
+
 RUN composer install --no-interaction --optimize-autoloader --no-dev
 
-RUN php artisan key:generate
+# Install npm dependencies ug build
+RUN npm install
+RUN npm run build
+
 RUN php artisan config:cache
 RUN php artisan route:cache
 RUN php artisan view:cache
