@@ -24,13 +24,12 @@ COPY . .
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 RUN chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 
-# Paghimo ug temporary .env file
-RUN cp .env.example .env
-
-# I-generate ang app key
-RUN php artisan key:generate
-
+# UNAHA ANG COMPOSER INSTALL
 RUN composer install --no-interaction --optimize-autoloader --no-dev
+
+# HUMAN SA COMPOSER, MAG-Copy sa .env.example ug generate key
+RUN cp .env.example .env
+RUN php artisan key:generate
 
 # Install npm dependencies ug build
 RUN npm install
