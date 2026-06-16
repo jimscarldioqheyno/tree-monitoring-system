@@ -28,9 +28,10 @@ COPY . .
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 RUN chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 
+# UNAHA ANG COMPOSER INSTALL
 RUN composer install --no-interaction --optimize-autoloader --no-dev
 
-# Paghimo ug temporary .env file
+# HUMAN SA COMPOSER, MAG-Copy sa .env.example ug generate key
 RUN cp .env.example .env
 RUN php artisan key:generate
 
